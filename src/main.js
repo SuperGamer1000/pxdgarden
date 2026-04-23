@@ -499,6 +499,42 @@ function setupEventListeners() {
       }
     });
   }
+
+  // Mobile Toggles
+  const catalogToggle = document.getElementById('mobile-catalog-toggle');
+  const infoToggle = document.getElementById('mobile-info-toggle');
+  const sidebar = document.querySelector('.sidebar');
+  const infoPanel = document.querySelector('.info-panel');
+
+  if (catalogToggle && sidebar) {
+    catalogToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sidebar.classList.toggle('open');
+      if (infoPanel) infoPanel.classList.remove('open');
+    });
+  }
+
+  if (infoToggle && infoPanel) {
+    infoToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      infoPanel.classList.toggle('open');
+      if (sidebar) sidebar.classList.remove('open');
+    });
+  }
+
+  // Close panels when clicking outside on mobile
+  document.addEventListener('click', (e) => {
+    if (window.innerWidth <= 1200) {
+      if (infoPanel && infoPanel.classList.contains('open') && !infoPanel.contains(e.target) && !e.target.closest('#mobile-info-toggle')) {
+        infoPanel.classList.remove('open');
+      }
+    }
+    if (window.innerWidth <= 768) {
+      if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !e.target.closest('#mobile-catalog-toggle')) {
+        sidebar.classList.remove('open');
+      }
+    }
+  });
 }
 
 // ===== Drag and Drop =====
