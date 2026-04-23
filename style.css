@@ -1,0 +1,1140 @@
+/* =====================================================
+   PXD GARDEN — Design System
+   A premium, earthy design for companion planting
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Earthy, Natural Palette */
+  --color-soil-700: hsl(25, 38%, 24%);
+  --color-soil-600: hsl(28, 35%, 32%);
+  --color-leaf-800: hsl(130, 42%, 22%);
+  --color-leaf-700: hsl(128, 40%, 28%);
+  --color-leaf-600: hsl(125, 38%, 35%);
+  --color-leaf-500: hsl(122, 35%, 45%);
+  --color-leaf-400: hsl(120, 32%, 55%);
+  --color-leaf-300: hsl(118, 30%, 65%);
+
+  --color-cream-100: hsl(40, 40%, 97%);
+  --color-cream-200: hsl(38, 35%, 93%);
+  --color-sky-100: hsl(200, 40%, 96%);
+
+  /* Companion Status Colors */
+  --status-optimal: hsl(142, 76%, 36%);
+  --status-optimal-bg: hsla(142, 76%, 36%, 0.15);
+  --status-optimal-glow: hsla(142, 76%, 45%, 0.4);
+  --status-warning: hsl(45, 93%, 47%);
+  --status-warning-bg: hsla(45, 93%, 47%, 0.15);
+  --status-warning-glow: hsla(45, 93%, 55%, 0.4);
+  --status-conflict: hsl(0, 84%, 60%);
+  --status-conflict-bg: hsla(0, 84%, 60%, 0.15);
+  --status-conflict-glow: hsla(0, 84%, 65%, 0.4);
+
+  /* Neutrals */
+  --neutral-50: hsl(0, 0%, 98%);
+  --neutral-100: hsl(0, 0%, 96%);
+  --neutral-200: hsl(0, 0%, 90%);
+  --neutral-300: hsl(0, 0%, 80%);
+  --neutral-400: hsl(0, 0%, 65%);
+  --neutral-500: hsl(0, 0%, 50%);
+  --neutral-600: hsl(0, 0%, 35%);
+  --neutral-700: hsl(0, 0%, 25%);
+  --neutral-800: hsl(0, 0%, 15%);
+  --neutral-900: hsl(0, 0%, 8%);
+
+  /* Typography */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Layout */
+  --sidebar-width: 280px;
+  --panel-width: 340px;
+  --header-height: 64px;
+  --toolbar-height: 56px;
+  --grid-cell-size: 80px;
+
+  /* Shadows & Effects */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-blur: blur(12px);
+
+  /* Surfaces — used for bg colors so dark mode can override */
+  --surface-primary: white;
+  --surface-secondary: var(--neutral-50);
+  --surface-tertiary: var(--neutral-100);
+  --body-bg: linear-gradient(135deg, var(--color-cream-100), var(--color-sky-100));
+  --border-color: var(--neutral-200);
+  --text-primary: var(--neutral-800);
+  --text-secondary: var(--neutral-600);
+  --text-tertiary: var(--neutral-500);
+}
+
+/* ==================== DARK / NIGHT MODE ==================== */
+[data-theme="dark"] {
+  --color-cream-100: hsl(220, 15%, 10%);
+  --color-cream-200: hsl(220, 15%, 8%);
+  --color-sky-100: hsl(220, 18%, 12%);
+
+  --color-leaf-800: hsl(130, 50%, 60%);
+  --color-leaf-700: hsl(128, 45%, 50%);
+  --color-leaf-600: hsl(125, 42%, 40%);
+  --color-leaf-500: hsl(122, 38%, 48%);
+  --color-leaf-400: hsl(120, 35%, 55%);
+  --color-leaf-300: hsl(118, 32%, 35%);
+
+  --color-soil-700: hsl(25, 30%, 18%);
+  --color-soil-600: hsl(28, 28%, 22%);
+
+  --neutral-50: hsl(220, 15%, 14%);
+  --neutral-100: hsl(220, 14%, 16%);
+  --neutral-200: hsl(220, 12%, 20%);
+  --neutral-300: hsl(220, 10%, 28%);
+  --neutral-400: hsl(220, 8%, 40%);
+  --neutral-500: hsl(220, 6%, 55%);
+  --neutral-600: hsl(220, 5%, 68%);
+  --neutral-700: hsl(220, 4%, 80%);
+  --neutral-800: hsl(220, 5%, 90%);
+  --neutral-900: hsl(220, 15%, 95%);
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4);
+  --glass-bg: rgba(20, 22, 30, 0.88);
+
+  --surface-primary: hsl(220, 15%, 12%);
+  --surface-secondary: hsl(220, 15%, 14%);
+  --surface-tertiary: hsl(220, 14%, 16%);
+  --body-bg: linear-gradient(135deg, hsl(220, 15%, 8%), hsl(220, 18%, 10%));
+  --border-color: hsl(220, 12%, 20%);
+  --text-primary: hsl(220, 5%, 90%);
+  --text-secondary: hsl(220, 5%, 68%);
+  --text-tertiary: hsl(220, 6%, 55%);
+}
+
+/* Dark mode surface overrides for elements using literal 'white' */
+[data-theme="dark"] .sidebar,
+[data-theme="dark"] .info-panel,
+[data-theme="dark"] .garden-toolbar {
+  background: var(--surface-primary);
+}
+
+[data-theme="dark"] .chip {
+  background: var(--surface-primary);
+}
+
+[data-theme="dark"] .plant-card:hover {
+  background: var(--surface-secondary);
+}
+
+[data-theme="dark"] .season-btn.active {
+  color: var(--color-leaf-800);
+  background: var(--surface-primary);
+}
+
+[data-theme="dark"] .placed-plant {
+  background: rgba(30, 33, 45, 0.95);
+}
+
+[data-theme="dark"] .placed-plant-remove {
+  border-color: var(--surface-primary);
+}
+
+[data-theme="dark"] .placed-plant-status {
+  background: var(--surface-primary);
+}
+
+[data-theme="dark"] .toolbar-select {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .search-box input {
+  background: var(--surface-secondary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tooltip {
+  background: hsl(220, 15%, 95%);
+  color: hsl(220, 15%, 10%);
+}
+
+[data-theme="dark"] .tooltip-arrow {
+  border-top-color: hsl(220, 15%, 95%);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--neutral-300);
+  background: var(--neutral-100);
+  border-radius: 9999px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s;
+  margin-left: 0.75rem;
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover {
+  background: var(--neutral-200);
+  border-color: var(--color-leaf-400);
+  transform: scale(1.08);
+}
+
+.lang-toggle {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--neutral-600);
+}
+
+.lang-toggle:hover {
+  color: var(--color-leaf-700);
+}
+
+[data-theme="dark"] .lang-toggle {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .lang-toggle:hover {
+  color: var(--text-primary);
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-family);
+  background: linear-gradient(135deg, var(--color-cream-100), var(--color-sky-100));
+  min-height: 100vh;
+  color: var(--neutral-800);
+  overflow-x: hidden;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Header */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-sm);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  padding: 0 1.5rem;
+  max-width: 1920px;
+  margin: 0 auto;
+}
+
+.app-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-leaf-800);
+}
+
+.app-icon {
+  font-size: 1.5rem;
+}
+
+.season-selector {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--neutral-100);
+  padding: 0.25rem;
+  border-radius: 9999px;
+}
+
+.season-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--neutral-600);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.season-btn:hover {
+  color: var(--neutral-800);
+  background: var(--neutral-200);
+}
+
+.season-btn.active {
+  color: var(--color-leaf-800);
+  background: white;
+  box-shadow: var(--shadow-md);
+}
+
+/* Main Layout */
+.main-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr var(--panel-width);
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  background: white;
+  border-right: 1px solid var(--neutral-200);
+  overflow: hidden;
+}
+
+.sidebar-header {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.sidebar-header h2 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--neutral-300);
+  border-radius: 0.75rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  background: var(--neutral-50);
+  margin-bottom: 1rem;
+  transition: all 0.15s;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: var(--color-leaf-500);
+  box-shadow: 0 0 0 3px var(--status-optimal-bg);
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  padding: 0.25rem 0.75rem;
+  border: 1px solid var(--neutral-300);
+  background: white;
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--neutral-600);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.chip:hover {
+  border-color: var(--color-leaf-400);
+  color: var(--color-leaf-700);
+}
+
+.chip.active {
+  background: var(--color-leaf-600);
+  border-color: var(--color-leaf-600);
+  color: white;
+}
+
+.plant-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.75rem;
+}
+
+/* Plant Card */
+.plant-card {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: var(--neutral-50);
+  border: 1px solid transparent;
+  border-radius: 0.75rem;
+  cursor: grab;
+  transition: all 0.2s;
+}
+
+.plant-card:hover {
+  background: white;
+  border-color: var(--color-leaf-300);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.plant-card:active {
+  cursor: grabbing;
+  transform: scale(0.98);
+}
+
+.plant-card.dragging {
+  opacity: 0.5;
+}
+
+.placed-plant.dragging {
+  opacity: 0.4;
+  transform: scale(0.9);
+}
+
+.placed-plant {
+  cursor: grab;
+}
+
+.placed-plant:active {
+  cursor: grabbing;
+}
+
+.grid-cell.occupied.drag-over {
+  outline: 2px dashed var(--color-leaf-400);
+  outline-offset: -2px;
+}
+
+.plant-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.plant-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.plant-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-800);
+  margin-bottom: 0.25rem;
+}
+
+.plant-meta {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+}
+
+.plant-add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: var(--color-leaf-500);
+  color: white;
+  border-radius: 9999px;
+  font-size: 1.125rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.15s;
+}
+
+.plant-card:hover .plant-add-btn {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.plant-add-btn:hover {
+  background: var(--color-leaf-600);
+  transform: scale(1.1);
+}
+
+/* Garden Section */
+.garden-section {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  background: linear-gradient(180deg, var(--color-cream-100), var(--color-cream-200));
+}
+
+.garden-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  min-height: var(--toolbar-height);
+  padding: 0.5rem 1rem;
+  background: white;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toolbar-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--neutral-600);
+}
+
+.toolbar-select {
+  padding: 0.5rem 1rem;
+  padding-right: 2rem;
+  border: 1px solid var(--neutral-300);
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  background: white;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-secondary {
+  background: var(--neutral-200);
+  color: var(--neutral-700);
+}
+
+.btn-secondary:hover {
+  background: var(--neutral-300);
+}
+
+/* Garden Selector */
+.garden-select {
+  min-width: 140px;
+  font-weight: 500;
+}
+
+.btn-garden-action {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-300);
+  color: var(--neutral-700);
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.btn-garden-action:hover {
+  background: var(--color-leaf-500);
+  border-color: var(--color-leaf-500);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-garden-delete:hover {
+  background: var(--status-conflict);
+  border-color: var(--status-conflict);
+}
+
+[data-theme="dark"] .btn-garden-action {
+  background: var(--surface-secondary);
+  border-color: var(--neutral-300);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .garden-select {
+  background: var(--surface-primary);
+  color: var(--text-primary);
+}
+
+/* Garden Canvas */
+.garden-canvas-wrapper {
+  position: relative;
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+  display: flex;
+}
+
+.garden-canvas {
+  position: relative;
+  flex: 1;
+  min-height: 450px;
+  background: linear-gradient(135deg, var(--color-soil-700), var(--color-soil-600));
+  border-radius: 1rem;
+  box-shadow: var(--shadow-xl), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.garden-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 8), 1fr);
+  grid-template-rows: repeat(var(--grid-rows, 6), 1fr);
+  gap: 4px;
+  padding: 1rem;
+  flex: 1;
+  min-height: 100%;
+}
+
+.grid-cell {
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.grid-cell:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.grid-cell.drag-over {
+  background: var(--status-optimal-bg);
+  border-color: var(--status-optimal);
+  border-style: solid;
+}
+
+.grid-cell.occupied {
+  background: transparent;
+  border-color: transparent;
+  padding: 0;
+}
+
+/* Placed Plants */
+.placed-plant {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-md);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: plantPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes plantPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.placed-plant:hover {
+  transform: scale(1.08);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+.placed-plant.selected {
+  box-shadow: 0 0 0 3px var(--color-leaf-500), var(--shadow-lg);
+}
+
+.placed-plant.optimal {
+  box-shadow: 0 0 0 3px var(--status-optimal), 0 0 20px var(--status-optimal-glow);
+}
+
+.placed-plant.warning {
+  box-shadow: 0 0 0 3px var(--status-warning), 0 0 20px var(--status-warning-glow);
+}
+
+.placed-plant.conflict {
+  box-shadow: 0 0 0 3px var(--status-conflict), 0 0 20px var(--status-conflict-glow);
+  animation: conflictPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes conflictPulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 3px var(--status-conflict), 0 0 15px var(--status-conflict-glow);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px var(--status-conflict), 0 0 25px var(--status-conflict-glow);
+  }
+}
+
+.placed-plant-emoji {
+  font-size: 1.5rem;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+
+.placed-plant-name {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--neutral-700);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding: 0 0.25rem;
+}
+
+.placed-plant-status {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+.placed-plant-remove {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  width: 22px;
+  height: 22px;
+  background: var(--status-conflict);
+  color: white;
+  border: 2px solid white;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placed-plant:hover .placed-plant-remove {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.placed-plant-remove:hover {
+  transform: scale(1.15);
+  background: hsl(0, 84%, 50%);
+}
+
+/* Pairing Lines */
+.pairing-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.pairing-line {
+  stroke-dasharray: 6, 4;
+  stroke-width: 2;
+  fill: none;
+  opacity: 0.7;
+  animation: dashMove 20s linear infinite;
+}
+
+@keyframes dashMove {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+.pairing-line.beneficial {
+  stroke: var(--status-optimal);
+}
+
+.pairing-line.avoid {
+  stroke: var(--status-conflict);
+  stroke-dasharray: 4, 6;
+}
+
+/* Empty State */
+.garden-empty-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+
+.garden-empty-state.hidden {
+  display: none;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: 1rem;
+  animation: gentleBounce 2s ease-in-out infinite;
+}
+
+@keyframes gentleBounce {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.empty-text {
+  font-size: 1.125rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.empty-hint {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+/* Info Panel */
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--header-height));
+  background: white;
+  border-left: 1px solid var(--neutral-200);
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.panel-header h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem;
+}
+
+.guide-intro {
+  padding: 1rem;
+  background: var(--neutral-50);
+  border-radius: 0.75rem;
+  color: var(--neutral-600);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+/* Companion Recommendations */
+.companion-section {
+  margin-bottom: 1.5rem;
+}
+
+.companion-section h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-600);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.75rem;
+}
+
+.companion-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.companion-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--neutral-50);
+  border-radius: 0.5rem;
+  transition: all 0.15s;
+}
+
+.companion-item:hover {
+  background: var(--neutral-100);
+}
+
+.companion-item.beneficial {
+  border-left: 3px solid var(--status-optimal);
+}
+
+.companion-item.avoid {
+  border-left: 3px solid var(--status-conflict);
+}
+
+.companion-emoji {
+  font-size: 1.25rem;
+}
+
+.companion-info {
+  flex: 1;
+}
+
+.companion-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--neutral-800);
+}
+
+.companion-reason {
+  font-size: 0.75rem;
+  color: var(--neutral-500);
+  margin-top: 0.25rem;
+}
+
+/* Spacing Info */
+.spacing-info {
+  padding: 1rem;
+  background: var(--color-sky-100);
+  border-radius: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.spacing-info h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neutral-700);
+  margin-bottom: 0.5rem;
+}
+
+.spacing-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-leaf-700);
+}
+
+.spacing-note {
+  font-size: 0.75rem;
+  color: var(--neutral-600);
+  margin-top: 0.5rem;
+}
+
+/* Seasonal Tips */
+.seasonal-tips {
+  padding: 1.25rem;
+  background: linear-gradient(135deg, var(--color-leaf-600), var(--color-leaf-700));
+  color: white;
+  margin-top: auto;
+}
+
+.seasonal-tips h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.seasonal-tips p {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  z-index: 1000;
+  max-width: 280px;
+  padding: 0.75rem 1rem;
+  background: var(--neutral-900);
+  color: white;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-xl);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.15s;
+}
+
+.tooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip-arrow {
+  position: absolute;
+  bottom: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid var(--neutral-900);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--neutral-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neutral-300);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neutral-400);
+}
+
+/* Mobile Toggles */
+.mobile-toggle {
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  #mobile-info-toggle {
+    display: flex;
+  }
+
+  .main-layout {
+    grid-template-columns: var(--sidebar-width) 1fr;
+  }
+
+  .info-panel {
+    position: fixed;
+    right: 0;
+    top: var(--header-height);
+    width: var(--panel-width);
+    transform: translateX(100%);
+    transition: transform 0.25s;
+    box-shadow: var(--shadow-xl);
+  }
+
+  .info-panel.open {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 768px) {
+  #mobile-catalog-toggle {
+    display: flex;
+  }
+
+  :root {
+    --sidebar-width: 100%;
+    --header-height: 56px;
+    --grid-cell-size: 70px;
+  }
+
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .header-content {
+    flex-direction: column;
+    padding: 0.75rem;
+    height: auto;
+  }
+
+  .app-header {
+    height: auto;
+    position: relative;
+  }
+
+  .season-selector {
+    width: 100%;
+    overflow-x: auto;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 85%;
+    max-width: 320px;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .garden-canvas-wrapper {
+    overflow-x: auto;
+    overflow-y: auto;
+  }
+
+  .garden-grid {
+    grid-template-columns: repeat(var(--grid-cols, 8), var(--grid-cell-size));
+    grid-template-rows: repeat(var(--grid-rows, 6), var(--grid-cell-size));
+  }
+}
