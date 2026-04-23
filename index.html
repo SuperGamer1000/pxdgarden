@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="PXD Garden - Intelligent companion planting with visual feedback, spacing guidance, and seasonal tips for your garden.">
+  <meta name="theme-color" content="#2d5016">
+  <title>PXD Garden — Companion Planting</title>
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1 class="app-title">
+          <span class="app-icon">🌱</span>
+          <span data-i18n="appTitle">PXD Garden</span>
+        </h1>
+        <div class="season-selector" id="season-selector">
+          <button class="season-btn" data-season="spring">🌸 <span data-i18n="spring">Spring</span></button>
+          <button class="season-btn active" data-season="summer">☀️ <span data-i18n="summer">Summer</span></button>
+          <button class="season-btn" data-season="autumn">🍂 <span data-i18n="autumn">Autumn</span></button>
+          <button class="season-btn" data-season="winter">❄️ <span data-i18n="winter">Winter</span></button>
+        </div>
+        <div class="header-actions" style="display: flex; align-items: center;">
+          <button class="theme-toggle lang-toggle" id="lang-toggle" aria-label="Switch to Greek"
+            title="Switch to Greek">EL</button>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle night mode"
+            title="Toggle night mode">🌙</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <main class="main-layout">
+      <!-- Sidebar: Plant Catalog -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2 data-i18n="plantCatalog">Plant Catalog</h2>
+          <div class="search-box">
+            <input type="search" id="plant-search" data-i18n-placeholder="searchPlants" placeholder="Search plants..." autocomplete="off">
+          </div>
+          <div class="filter-chips" id="filter-chips">
+            <button class="chip active" data-category="all" data-i18n="all">All</button>
+            <button class="chip" data-category="vegetable">🥬 <span data-i18n="vegetables">Vegetables</span></button>
+            <button class="chip" data-category="herb">🌿 <span data-i18n="herbs">Herbs</span></button>
+            <button class="chip" data-category="flower">🌸 <span data-i18n="flowers">Flowers</span></button>
+            <button class="chip" data-category="fruit">🍓 <span data-i18n="fruits">Fruits</span></button>
+          </div>
+        </div>
+        <div class="plant-list" id="plant-list"></div>
+      </aside>
+
+      <!-- Garden Canvas -->
+      <section class="garden-section">
+        <div class="garden-toolbar">
+          <div class="toolbar-group" id="garden-selector">
+            <!-- Rendered dynamically by renderGardenSelector() -->
+          </div>
+          <div class="toolbar-group">
+            <button id="clear-garden" class="btn btn-secondary" data-i18n="clearGarden">Clear Garden</button>
+          </div>
+        </div>
+
+        <div class="garden-canvas-wrapper">
+          <div class="garden-canvas" id="garden-canvas">
+            <div class="garden-grid" id="garden-grid"></div>
+            <svg class="pairing-lines" id="pairing-lines"></svg>
+          </div>
+          <div class="garden-empty-state" id="garden-empty">
+            <span class="empty-icon">🌱</span>
+            <p class="empty-text" data-i18n="dragHint">Drag plants here to start your garden</p>
+            <p class="empty-hint" data-i18n="dragSubHint">We'll help you find the perfect companions</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Info Panel -->
+      <aside class="info-panel" id="info-panel">
+        <div class="panel-header">
+          <h3 data-i18n="companionGuide">Companion Guide</h3>
+        </div>
+        <div class="panel-content" id="panel-content">
+          <div class="guide-intro">
+            <p data-i18n="selectPlantHint">Select a plant in your garden to see companion recommendations and spacing
+              tips.</p>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip" role="tooltip" aria-hidden="true">
+      <div class="tooltip-content"></div>
+      <div class="tooltip-arrow"></div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
+</html>
