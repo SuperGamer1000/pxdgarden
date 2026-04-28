@@ -1182,17 +1182,19 @@ body {
 
   .nav-controls {
     display: none;
-    position: absolute;
+    position: fixed;
     top: var(--header-height);
     left: 0;
     right: 0;
-    background: var(--glass-bg);
+    background: var(--surface-primary);
     backdrop-filter: var(--glass-blur);
     flex-direction: column;
     padding: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: var(--shadow-md);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-lg);
     z-index: 1000;
+    max-height: calc(100vh - var(--header-height));
+    overflow-y: auto;
   }
 
   .nav-controls.open {
