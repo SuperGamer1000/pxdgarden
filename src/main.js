@@ -18,7 +18,7 @@ import {
 import { calculateWaterNeeds, getWeatherAdvice } from './engine/waterCalculator.js';
 import {
   t, getPlantName, getPlantDescription, getReasonLabel,
-  getLanguage, setLanguage
+  getLanguage, setLanguage, generateMicrocopyI18n
 } from './data/translations.js';
 
 
@@ -69,6 +69,7 @@ function saveGarden() {
       season: state.season
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    showToast(t('saved'));
   } catch (e) {
     console.warn('Could not save garden:', e);
   }
@@ -137,8 +138,36 @@ function loadGardenIntoState(gardenId) {
   if (!garden) return;
   state.currentGardenId = gardenId;
   state.placedPlants = garden.placedPlants || [];
-  state.gridCols = garden.gridCols || 8;
-  state.gridRows = garden.gridRows || 6;
+
+  const isMobile = window.innerWidth <= 768;
+  const targetCols = isMobile ? 4 : 8;
+  const targetRows = isMobile ? 12 : 6;
+  const currentCols = garden.gridCols || 8;
+
+  if (currentCols !== targetCols) {
+    if (targetCols === 4 && currentCols === 8) {
+      state.placedPlants.forEach(p => {
+        const oldRow = p.position.row;
+        const oldCol = p.position.col;
+        p.position.col = oldCol % 4;
+        p.position.row = oldRow * 2 + Math.floor(oldCol / 4);
+      });
+    } else if (targetCols === 8 && currentCols === 4) {
+      state.placedPlants.forEach(p => {
+        const oldRow = p.position.row;
+        const oldCol = p.position.col;
+        p.position.col = oldCol + (oldRow % 2) * 4;
+        p.position.row = Math.floor(oldRow / 2);
+      });
+    }
+    garden.gridCols = targetCols;
+    garden.gridRows = targetRows;
+    // Don't call saveGarden() here — it runs during init before DOM is ready.
+    // The next user action will persist this change.
+  }
+
+  state.gridCols = garden.gridCols || targetCols;
+  state.gridRows = garden.gridRows || targetRows;
   state.selectedPlant = null;
   // Restore idCounter
   if (state.placedPlants.length > 0) {
@@ -149,12 +178,16 @@ function loadGardenIntoState(gardenId) {
 // ===== Multiple Garden Management =====
 function createGarden(name) {
   const id = generateGardenId();
+  const isMobile = window.innerWidth <= 768;
+  const targetCols = isMobile ? 4 : 8;
+  const targetRows = isMobile ? 12 : 6;
+  
   state.gardens[id] = {
     id,
     name: name || `Garden ${Object.keys(state.gardens).length + 1}`,
     placedPlants: [],
-    gridCols: 8,
-    gridRows: 6
+    gridCols: targetCols,
+    gridRows: targetRows
   };
   switchGarden(id);
   return id;
@@ -250,6 +283,62 @@ function renderGardenSelector() {
       }
     });
   }
+
+  // Also populate mobile garden controls in burger menu
+  const mobileControls = document.getElementById('mobile-garden-controls');
+  if (mobileControls) {
+    mobileControls.innerHTML = `
+      <div class="toolbar-group">
+        <select id="mobile-garden-select" class="toolbar-select garden-select" title="Switch garden">
+          ${ids.map(id => {
+            const g = state.gardens[id];
+            return `<option value="${id}" ${id === state.currentGardenId ? 'selected' : ''}>${g.name}</option>`;
+          }).join('')}
+        </select>
+      </div>
+      <div class="toolbar-group">
+        <button id="mobile-new-garden-btn" class="btn btn-garden-action">＋ New</button>
+        <button id="mobile-rename-garden-btn" class="btn btn-garden-action">✏️</button>
+        ${ids.length > 1 ? `<button id="mobile-delete-garden-btn" class="btn btn-garden-action btn-garden-delete">🗑️</button>` : ''}
+        <button id="mobile-clear-garden" class="btn btn-secondary">${t('clearGarden')}</button>
+      </div>
+    `;
+
+    const ms = mobileControls.querySelector('#mobile-garden-select');
+    if (ms) ms.addEventListener('change', (e) => switchGarden(e.target.value));
+
+    const mn = mobileControls.querySelector('#mobile-new-garden-btn');
+    if (mn) mn.addEventListener('click', () => {
+      const name = prompt(t('newGardenPrompt'), `Garden ${ids.length + 1}`);
+      if (name !== null) createGarden(name);
+    });
+
+    const mr = mobileControls.querySelector('#mobile-rename-garden-btn');
+    if (mr) mr.addEventListener('click', () => {
+      const name = prompt(t('renameGardenPrompt'), currentGarden?.name || '');
+      if (name !== null) renameGarden(state.currentGardenId, name);
+    });
+
+    const md = mobileControls.querySelector('#mobile-delete-garden-btn');
+    if (md) md.addEventListener('click', () => {
+      if (confirm(t('deleteConfirm').replace('{name}', currentGarden?.name))) {
+        deleteGarden(state.currentGardenId);
+      }
+    });
+
+    const mc = mobileControls.querySelector('#mobile-clear-garden');
+    if (mc) mc.addEventListener('click', () => {
+      if (state.placedPlants.length === 0) return;
+      if (confirm(t('clearConfirm'))) {
+        state.placedPlants = [];
+        state.selectedPlant = null;
+        renderPlacedPlants();
+        updateGardenAnalysis();
+        updateEmptyState();
+        saveGarden();
+      }
+    });
+  }
 }
 
 // ===== Language =====
@@ -302,6 +391,8 @@ document.addEventListener('DOMContentLoaded', () => {
   updateSeasonalTips();
   updateEmptyState();
   renderGardenSelector();
+  // Persist any grid reshape or migration that happened during load
+  saveGarden();
 });
 
 // ===== Theme / Night Mode =====
@@ -441,9 +532,11 @@ function setupEventListeners() {
   // Season selector
   document.querySelectorAll('.season-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
+      const seasonBtn = e.target.closest('.season-btn');
+      if (!seasonBtn) return;
       document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      state.season = e.target.dataset.season;
+      seasonBtn.classList.add('active');
+      state.season = seasonBtn.dataset.season;
       renderPlantCatalog();
       updateSeasonalTips();
       updateGardenAnalysis();
@@ -454,9 +547,11 @@ function setupEventListeners() {
   // Category filter
   document.querySelectorAll('.chip').forEach(chip => {
     chip.addEventListener('click', (e) => {
+      const chipBtn = e.target.closest('.chip');
+      if (!chipBtn) return;
       document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-      e.target.classList.add('active');
-      state.category = e.target.dataset.category;
+      chipBtn.classList.add('active');
+      state.category = chipBtn.dataset.category;
       renderPlantCatalog();
     });
   });
@@ -519,6 +614,20 @@ function setupEventListeners() {
       e.stopPropagation();
       infoPanel.classList.toggle('open');
       if (sidebar) sidebar.classList.remove('open');
+      const navControls = document.getElementById('nav-controls');
+      if (navControls) navControls.classList.remove('open');
+    });
+  }
+
+  const burgerToggle = document.getElementById('burger-toggle');
+  const navControls = document.getElementById('nav-controls');
+
+  if (burgerToggle && navControls) {
+    burgerToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      navControls.classList.toggle('open');
+      if (sidebar) sidebar.classList.remove('open');
+      if (infoPanel) infoPanel.classList.remove('open');
     });
   }
 
@@ -532,6 +641,10 @@ function setupEventListeners() {
     if (window.innerWidth <= 768) {
       if (sidebar && sidebar.classList.contains('open') && !sidebar.contains(e.target) && !e.target.closest('#mobile-catalog-toggle')) {
         sidebar.classList.remove('open');
+      }
+      const navControls = document.getElementById('nav-controls');
+      if (navControls && navControls.classList.contains('open') && !navControls.contains(e.target) && !e.target.closest('#burger-toggle')) {
+        navControls.classList.remove('open');
       }
     }
   });
@@ -653,6 +766,26 @@ function handleCellClick(e) {
 
   const cell = e.target.closest('.grid-cell');
   if (!cell || cell.classList.contains('occupied')) return;
+
+  // Move selected plant to the clicked empty cell
+  if (state.selectedPlant) {
+    const instance = state.placedPlants.find(p => p.id === state.selectedPlant);
+    if (instance) {
+      instance.position.row = parseInt(cell.dataset.row);
+      instance.position.col = parseInt(cell.dataset.col);
+      
+      // Keep it selected after moving
+      renderPlacedPlants();
+      updateGardenAnalysis();
+      saveGarden();
+      
+      // Reselect it visually since renderPlacedPlants rebuilds DOM
+      setTimeout(() => {
+        const newEl = document.querySelector(`.placed-plant[data-instance-id="${instance.id}"]`);
+        if (newEl) newEl.classList.add('selected');
+      }, 0);
+    }
+  }
 }
 
 function handleQuickAdd(e) {
@@ -885,33 +1018,41 @@ function updateInfoPanel() {
   html += `
     <div class="companion-section">
       <h4>${t('growingConditions')}</h4>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-        <label style="font-size: 0.7rem; color: var(--neutral-500);">${t('gardenType')}</label>
-        <label style="font-size: 0.7rem; color: var(--neutral-500);">${t('sunlight')}</label>
-        <select class="toolbar-select" data-per-plant="gardenType" style="font-size: 0.8rem;">
-          <option value="container" ${placed.gardenType === 'container' ? 'selected' : ''}>${t('container')}</option>
-          <option value="raised-bed" ${placed.gardenType === 'raised-bed' ? 'selected' : ''}>${t('raisedBed')}</option>
-          <option value="ground" ${placed.gardenType === 'ground' ? 'selected' : ''}>${t('inGround')}</option>
-        </select>
-        <select class="toolbar-select" data-per-plant="sunlight" style="font-size: 0.8rem;">
-          <option value="full" ${placed.sunlight === 'full' ? 'selected' : ''}>${t('fullSun')}</option>
-          <option value="partial" ${placed.sunlight === 'partial' ? 'selected' : ''}>${t('partial')}</option>
-          <option value="shade" ${placed.sunlight === 'shade' ? 'selected' : ''}>${t('shade')}</option>
-        </select>
-        <label style="font-size: 0.7rem; color: var(--neutral-500);">${t('weather')}</label>
-        <label style="font-size: 0.7rem; color: var(--neutral-500);">${t('soil')}</label>
-        <select class="toolbar-select" data-per-plant="weather" style="font-size: 0.8rem;">
-          <option value="hot" ${placed.weather === 'hot' ? 'selected' : ''}>${t('hot')}</option>
-          <option value="warm" ${placed.weather === 'warm' ? 'selected' : ''}>${t('warm')}</option>
-          <option value="mild" ${placed.weather === 'mild' ? 'selected' : ''}>${t('mild')}</option>
-          <option value="cool" ${placed.weather === 'cool' ? 'selected' : ''}>${t('cool')}</option>
-          <option value="cold" ${placed.weather === 'cold' ? 'selected' : ''}>${t('cold')}</option>
-        </select>
-        <select class="toolbar-select" data-per-plant="soilType" style="font-size: 0.8rem;">
-          <option value="sandy" ${placed.soilType === 'sandy' ? 'selected' : ''}>${t('sandy')}</option>
-          <option value="loamy" ${placed.soilType === 'loamy' ? 'selected' : ''}>${t('loamy')}</option>
-          <option value="clay" ${placed.soilType === 'clay' ? 'selected' : ''}>${t('clay')}</option>
-        </select>
+      <div class="growing-conditions-grid">
+        <div class="growing-condition-row">
+          <label>${t('gardenType')}</label>
+          <select class="toolbar-select" data-per-plant="gardenType">
+            <option value="container" ${placed.gardenType === 'container' ? 'selected' : ''}>${t('container')}</option>
+            <option value="raised-bed" ${placed.gardenType === 'raised-bed' ? 'selected' : ''}>${t('raisedBed')}</option>
+            <option value="ground" ${placed.gardenType === 'ground' ? 'selected' : ''}>${t('inGround')}</option>
+          </select>
+        </div>
+        <div class="growing-condition-row">
+          <label>${t('sunlight')}</label>
+          <select class="toolbar-select" data-per-plant="sunlight">
+            <option value="full" ${placed.sunlight === 'full' ? 'selected' : ''}>${t('fullSun')}</option>
+            <option value="partial" ${placed.sunlight === 'partial' ? 'selected' : ''}>${t('partial')}</option>
+            <option value="shade" ${placed.sunlight === 'shade' ? 'selected' : ''}>${t('shade')}</option>
+          </select>
+        </div>
+        <div class="growing-condition-row">
+          <label>${t('weather')}</label>
+          <select class="toolbar-select" data-per-plant="weather">
+            <option value="hot" ${placed.weather === 'hot' ? 'selected' : ''}>${t('hot')}</option>
+            <option value="warm" ${placed.weather === 'warm' ? 'selected' : ''}>${t('warm')}</option>
+            <option value="mild" ${placed.weather === 'mild' ? 'selected' : ''}>${t('mild')}</option>
+            <option value="cool" ${placed.weather === 'cool' ? 'selected' : ''}>${t('cool')}</option>
+            <option value="cold" ${placed.weather === 'cold' ? 'selected' : ''}>${t('cold')}</option>
+          </select>
+        </div>
+        <div class="growing-condition-row">
+          <label>${t('soil')}</label>
+          <select class="toolbar-select" data-per-plant="soilType">
+            <option value="sandy" ${placed.soilType === 'sandy' ? 'selected' : ''}>${t('sandy')}</option>
+            <option value="loamy" ${placed.soilType === 'loamy' ? 'selected' : ''}>${t('loamy')}</option>
+            <option value="clay" ${placed.soilType === 'clay' ? 'selected' : ''}>${t('clay')}</option>
+          </select>
+        </div>
       </div>
     </div>
   `;
@@ -929,7 +1070,7 @@ function updateInfoPanel() {
   if (companions.beneficial.length > 0) {
     html += `
       <div class="companion-section">
-        <h4>✓ Good Companions</h4>
+        <h4>${t('goodCompanions')}</h4>
         <div class="companion-list">
           ${companions.beneficial.slice(0, 5).map(c => {
       const companion = getPlantById(c.plantId);
@@ -939,7 +1080,7 @@ function updateInfoPanel() {
               <div class="companion-item beneficial" ${!inGarden ? 'style="opacity: 0.7;"' : ''}>
                 <span class="companion-emoji">${companion.icon}</span>
                 <div class="companion-info">
-                  <div class="companion-name">${companion.name} ${inGarden ? '✓' : ''}</div>
+                  <div class="companion-name">${getPlantName(companion)} ${inGarden ? '✓' : ''}</div>
                   <div class="companion-reason">${formatReasons(c.reasons).join(', ')}</div>
                 </div>
               </div>
@@ -976,6 +1117,22 @@ function updateInfoPanel() {
     `;
   }
 
+  // Fallback if no companions exist
+  if (companions.beneficial.length === 0 && companions.avoid.length === 0) {
+    html += `
+      <div class="companion-section">
+        <h4>${t('companions')}</h4>
+        <div class="companion-list">
+          <div class="companion-item" style="background: transparent; padding: 0;">
+            <div class="companion-info">
+              <div class="companion-reason" style="margin-top: 0;">${t('noCompanions')}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
   // Water Needs Section (all per-plant conditions)
   const waterContext = {
     season: state.season,
@@ -991,7 +1148,7 @@ function updateInfoPanel() {
       <h4>${t('waterNeeds')}</h4>
       <div class="spacing-info" style="background: linear-gradient(135deg, hsl(200, 60%, 95%), hsl(210, 50%, 92%));">
         <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px;">
-          <div class="spacing-value" style="color: hsl(200, 70%, 35%);">${waterNeeds.litersPerWeek}L/week</div>
+          <div class="spacing-value" style="color: hsl(200, 70%, 35%);">${waterNeeds.litersPerWeek}L/${t('week')}</div>
           <span style="font-size: 0.875rem; color: var(--neutral-600);">${waterNeeds.frequency}</span>
         </div>
         <p class="spacing-note" style="margin-bottom: 8px;">${waterNeeds.patternDescription}</p>
@@ -1092,3 +1249,33 @@ function hideTooltip() {
 
 // Export state for debugging
 window.gardenState = state;
+
+function showToast(message) {
+  let toast = document.getElementById('toast-msg');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast-msg';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.background = 'var(--surface-primary, #333)';
+    toast.style.color = '#fff';
+    toast.style.padding = '8px 16px';
+    toast.style.borderRadius = '20px';
+    toast.style.zIndex = '9999';
+    toast.style.fontSize = '0.875rem';
+    toast.style.boxShadow = 'var(--shadow-md)';
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s';
+    toast.style.pointerEvents = 'none';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.opacity = '1';
+  
+  if (toast._timeout) clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(() => {
+    toast.style.opacity = '0';
+  }, 2000);
+}
