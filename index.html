@@ -21,19 +21,25 @@
           <span class="app-icon">🌱</span>
           <span data-i18n="appTitle">PXD Garden</span>
         </h1>
-        <div class="season-selector" id="season-selector">
-          <button class="season-btn" data-season="spring">🌸 <span data-i18n="spring">Spring</span></button>
-          <button class="season-btn active" data-season="summer">☀️ <span data-i18n="summer">Summer</span></button>
-          <button class="season-btn" data-season="autumn">🍂 <span data-i18n="autumn">Autumn</span></button>
-          <button class="season-btn" data-season="winter">❄️ <span data-i18n="winter">Winter</span></button>
-        </div>
+        <nav class="nav-controls" id="nav-controls">
+          <div class="season-selector" id="season-selector">
+            <button class="season-btn" data-season="spring">🌸 <span data-i18n="spring">Spring</span></button>
+            <button class="season-btn active" data-season="summer">☀️ <span data-i18n="summer">Summer</span></button>
+            <button class="season-btn" data-season="autumn">🍂 <span data-i18n="autumn">Autumn</span></button>
+            <button class="season-btn" data-season="winter">❄️ <span data-i18n="winter">Winter</span></button>
+          </div>
+          <div class="display-controls">
+            <button class="theme-toggle lang-toggle" id="lang-toggle" aria-label="Switch to Greek" title="Switch to Greek">EL</button>
+            <button class="theme-toggle" id="theme-toggle" aria-label="Toggle night mode" title="Toggle night mode">🌙</button>
+          </div>
+          <div class="mobile-garden-controls" id="mobile-garden-controls">
+            <!-- Populated by renderGardenSelector on mobile -->
+          </div>
+        </nav>
         <div class="header-actions" style="display: flex; align-items: center;">
           <button class="theme-toggle mobile-toggle" id="mobile-catalog-toggle" aria-label="Toggle Catalog" title="Toggle Catalog">📖</button>
           <button class="theme-toggle mobile-toggle" id="mobile-info-toggle" aria-label="Toggle Info" title="Toggle Info">ℹ️</button>
-          <button class="theme-toggle lang-toggle" id="lang-toggle" aria-label="Switch to Greek"
-            title="Switch to Greek">EL</button>
-          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle night mode"
-            title="Toggle night mode">🌙</button>
+          <button class="theme-toggle burger-toggle" id="burger-toggle" aria-label="Menu" title="Menu">☰</button>
         </div>
       </div>
     </header>
