@@ -1265,13 +1265,19 @@ body {
   }
 
   .garden-canvas-wrapper {
+    display: flex;
+    flex-direction: column;
     overflow-x: auto;
     overflow-y: auto;
   }
 
+  .garden-canvas {
+    min-height: max-content;
+  }
+
   .garden-grid {
     grid-template-columns: repeat(var(--grid-cols, 4), 1fr);
-    grid-template-rows: repeat(var(--grid-rows, 12), 1fr);
+    grid-template-rows: repeat(var(--grid-rows, 12), auto);
     gap: 4px;
     padding: 0.5rem;
   }
