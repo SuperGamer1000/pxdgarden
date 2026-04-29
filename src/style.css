@@ -1147,6 +1147,7 @@ body {
     height: var(--header-height);
     position: sticky;
     overflow: visible;
+    z-index: 200;
   }
 
   .header-content {
@@ -1154,6 +1155,7 @@ body {
     padding: 0 0.5rem;
     height: 100%;
     gap: 0.25rem;
+    position: relative;
   }
 
   .app-title {
@@ -1182,18 +1184,17 @@ body {
 
   .nav-controls {
     display: none;
-    position: fixed;
-    top: var(--header-height);
-    left: 0;
-    right: 0;
+    position: absolute;
+    top: 100%;
+    left: -0.5rem;
+    right: -0.5rem;
     background: var(--surface-primary);
-    backdrop-filter: var(--glass-blur);
     flex-direction: column;
     padding: 1rem;
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 2px solid var(--border-color);
     box-shadow: var(--shadow-lg);
     z-index: 1000;
-    max-height: calc(100vh - var(--header-height));
+    max-height: 80vh;
     overflow-y: auto;
   }
 
@@ -1264,13 +1265,19 @@ body {
   }
 
   .garden-canvas-wrapper {
+    display: flex;
+    flex-direction: column;
     overflow-x: auto;
     overflow-y: auto;
   }
 
+  .garden-canvas {
+    min-height: max-content;
+  }
+
   .garden-grid {
     grid-template-columns: repeat(var(--grid-cols, 4), 1fr);
-    grid-template-rows: repeat(var(--grid-rows, 12), 1fr);
+    grid-template-rows: repeat(var(--grid-rows, 12), auto);
     gap: 4px;
     padding: 0.5rem;
   }
