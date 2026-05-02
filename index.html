@@ -23,6 +23,7 @@
         </h1>
         <nav class="nav-controls" id="nav-controls">
           <div class="season-selector" id="season-selector">
+            <button class="season-btn" data-season="auto">✨ <span data-i18n="auto">Auto</span></button>
             <button class="season-btn" data-season="spring">🌸 <span data-i18n="spring">Spring</span></button>
             <button class="season-btn active" data-season="summer">☀️ <span data-i18n="summer">Summer</span></button>
             <button class="season-btn" data-season="autumn">🍂 <span data-i18n="autumn">Autumn</span></button>
@@ -31,6 +32,7 @@
           <div class="display-controls">
             <button class="theme-toggle lang-toggle" id="lang-toggle" aria-label="Switch to Greek" title="Switch to Greek">EL</button>
             <button class="theme-toggle" id="theme-toggle" aria-label="Toggle night mode" title="Toggle night mode">🌙</button>
+            <button class="theme-toggle" id="help-toggle" aria-label="Help" title="Help">❓</button>
           </div>
           <div class="mobile-garden-controls" id="mobile-garden-controls">
             <!-- Populated by renderGardenSelector on mobile -->
@@ -101,6 +103,34 @@
         </div>
       </aside>
     </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Powered by <a href="https://www.instagram.com/pxdproject/" target="_blank" rel="noopener noreferrer" class="brand-link">PXD PROJECT</a></p>
+    </footer>
+
+    <!-- Help Modal -->
+    <div class="modal-overlay" id="help-modal" aria-hidden="true">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 data-i18n="helpTitle">How to use PXD Garden</h2>
+          <button class="modal-close" id="help-close" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+          <p data-i18n="helpIntro">PXD Garden is an interactive companion planting planner. Here is how to use it:</p>
+          <ul class="help-list">
+            <li data-i18n="helpStep1">1. Seasons: Select a season or use Auto mode to see available plants.</li>
+            <li data-i18n="helpStep2">2. Catalog: Search or filter plants by category (Vegetables, Herbs, Flowers, Fruits).</li>
+            <li data-i18n="helpStep3">3. Planting: Drag and drop plants from the catalog onto the garden grid.</li>
+            <li data-i18n="helpStep4">4. Info: Click a placed plant to see its specific companions, care, and watering tips.</li>
+            <li data-i18n="helpStep5">5. Compatibility: Green halos indicate good companions, yellow means warning, red means conflict.</li>
+            <li data-i18n="helpStep6">6. Settings: Adjust your garden's sunlight, weather, soil, and container type for tailored advice.</li>
+            <li data-i18n="helpStep7">7. Multiple Gardens: Use the top bar to create, rename, delete, or switch between different gardens.</li>
+            <li data-i18n="helpStep8">8. Preferences: Use the top buttons to switch languages or toggle Night Mode.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
     <!-- Tooltip -->
     <div class="tooltip" id="tooltip" role="tooltip" aria-hidden="true">
