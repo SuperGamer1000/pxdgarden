@@ -305,6 +305,7 @@ body {
   border-radius: 9999px;
   cursor: pointer;
   transition: all 0.2s;
+  text-transform: capitalize;
 }
 
 .season-btn:hover {
