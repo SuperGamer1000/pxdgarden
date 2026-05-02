@@ -24,7 +24,8 @@ import {
 
 // ===== Application State =====
 const state = {
-  season: 'summer',
+  seasonMode: 'auto',
+  season: getAutoSeason(),
   gardenType: 'container',
   sunlight: 'full',
   weather: 'warm',
@@ -52,6 +53,14 @@ function generateGardenId() {
   return `garden-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+function getAutoSeason() {
+  const month = new Date().getMonth(); // 0-11
+  if (month >= 2 && month <= 4) return 'spring'; // Mar, Apr, May
+  if (month >= 5 && month <= 7) return 'summer'; // Jun, Jul, Aug
+  if (month >= 8 && month <= 10) return 'autumn'; // Sep, Oct, Nov
+  return 'winter'; // Dec, Jan, Feb
+}
+
 // ===== LocalStorage Persistence =====
 const STORAGE_KEY = 'pxd-garden-gardens';
 
@@ -66,7 +75,8 @@ function saveGarden() {
     const data = {
       currentGardenId: state.currentGardenId,
       gardens: state.gardens,
-      season: state.season
+      season: state.season,
+      seasonMode: state.seasonMode
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     showToast(t('saved'));
@@ -84,7 +94,15 @@ function loadGarden() {
         state.gardens = data.gardens;
         state.currentGardenId = data.currentGardenId || Object.keys(data.gardens)[0];
       }
-      if (data.season) {
+      if (data.seasonMode) {
+        state.seasonMode = data.seasonMode;
+      }
+      if (state.seasonMode === 'auto') {
+        state.season = getAutoSeason();
+        document.querySelectorAll('.season-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.season === 'auto');
+        });
+      } else if (data.season) {
         state.season = data.season;
         document.querySelectorAll('.season-btn').forEach(b => {
           b.classList.toggle('active', b.dataset.season === state.season);
@@ -106,7 +124,15 @@ function loadGarden() {
           }
           if (legacy.gridCols) legacyCols = legacy.gridCols;
           if (legacy.gridRows) legacyRows = legacy.gridRows;
-          if (legacy.season) {
+          if (legacy.seasonMode) {
+            state.seasonMode = legacy.seasonMode;
+          }
+          if (state.seasonMode === 'auto') {
+            state.season = getAutoSeason();
+            document.querySelectorAll('.season-btn').forEach(b => {
+              b.classList.toggle('active', b.dataset.season === 'auto');
+            });
+          } else if (legacy.season) {
             state.season = legacy.season;
             document.querySelectorAll('.season-btn').forEach(b => {
               b.classList.toggle('active', b.dataset.season === state.season);
@@ -528,6 +554,30 @@ function setupEventListeners() {
     themeBtn.addEventListener('click', toggleTheme);
   }
 
+  // Help Modal
+  const helpToggle = document.getElementById('help-toggle');
+  const helpModal = document.getElementById('help-modal');
+  const helpClose = document.getElementById('help-close');
+
+  if (helpToggle && helpModal) {
+    helpToggle.addEventListener('click', () => {
+      helpModal.setAttribute('aria-hidden', 'false');
+    });
+  }
+
+  if (helpClose && helpModal) {
+    helpClose.addEventListener('click', () => {
+      helpModal.setAttribute('aria-hidden', 'true');
+    });
+  }
+
+  if (helpModal) {
+    helpModal.addEventListener('click', (e) => {
+      if (e.target === helpModal) {
+        helpModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
 
   // Season selector
   document.querySelectorAll('.season-btn').forEach(btn => {
@@ -536,7 +586,16 @@ function setupEventListeners() {
       if (!seasonBtn) return;
       document.querySelectorAll('.season-btn').forEach(b => b.classList.remove('active'));
       seasonBtn.classList.add('active');
-      state.season = seasonBtn.dataset.season;
+      
+      const selected = seasonBtn.dataset.season;
+      if (selected === 'auto') {
+        state.seasonMode = 'auto';
+        state.season = getAutoSeason();
+      } else {
+        state.seasonMode = 'manual';
+        state.season = selected;
+      }
+      
       renderPlantCatalog();
       updateSeasonalTips();
       updateGardenAnalysis();
