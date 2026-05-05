@@ -1318,8 +1318,8 @@ function showToast(message) {
     toast.style.bottom = '20px';
     toast.style.left = '50%';
     toast.style.transform = 'translateX(-50%)';
-    toast.style.background = 'var(--surface-primary, #333)';
-    toast.style.color = '#fff';
+    toast.style.background = 'var(--neutral-900, #333)';
+    toast.style.color = 'var(--neutral-50, #fff)';
     toast.style.padding = '8px 16px';
     toast.style.borderRadius = '20px';
     toast.style.zIndex = '9999';

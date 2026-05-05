@@ -1347,6 +1347,9 @@ body {
   background: var(--surface-primary);
   width: 90%;
   max-width: 500px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
   border-radius: 1rem;
   box-shadow: var(--shadow-xl);
   transform: translateY(20px);
@@ -1364,6 +1367,7 @@ body {
   align-items: center;
   padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
 }
 
 .modal-header h2 {
@@ -1390,6 +1394,7 @@ body {
 .modal-body {
   padding: 1.5rem;
   color: var(--text-secondary);
+  overflow-y: auto;
 }
 
 .modal-body p {
